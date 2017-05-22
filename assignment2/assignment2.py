@@ -55,8 +55,8 @@ def train(epochs):
 
     # SET HYPERPARAMETERS HERE
     batchsize = 100 # Mini-batch size.
-    learning_rate = 0.001 # Learning rate; default = 0.1.
-    momentum = 0.9 # Momentum; default = 0.9.
+    learning_rate = 0.1 # Learning rate; default = 0.1.
+    momentum = 0.5 # Momentum; default = 0.9.
     numhid1 = 50 # Dimensionality of embedding space; default = 50.
     numhid2 = 200 # Number of units in hidden layer; default = 200.
     init_wt = 0.01  # Standard deviation of the normal distribution
@@ -82,6 +82,10 @@ def train(epochs):
     vocab_size = vocab.shape[1]
 
     # INITIALIZE WEIGHTS AND BIASES
+    #word_embedding_weights = np.zeros((vocab_size, numhid1))
+    #embed_to_hid_weights = np.zeros((numwords * numhid1, numhid2))
+    #hid_to_output_weights = np.zeros((numhid2, vocab_size))
+
     word_embedding_weights = init_wt * np.random.randn(vocab_size, numhid1)
     embed_to_hid_weights = init_wt * np.random.randn(numwords * numhid1, numhid2)
     hid_to_output_weights = init_wt * np.random.randn(numhid2, vocab_size)
@@ -277,6 +281,8 @@ def train(epochs):
     CE = -sum(sum( \
         expanded_valid_target * np.log(output_layer_state + tiny))) / datasetsize
     print("Final validation CE", CE)
+
+
 
     # EVALUATE ON TEST SET
     print("Running test...")

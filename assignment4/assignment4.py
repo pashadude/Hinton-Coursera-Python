@@ -157,7 +157,9 @@ def configuration_goodness(rbm_w, visible_state, hidden_state):
     # <number of configurations that we're handling in parallel>.
     # This returns a scalar: the mean over cases of the goodness (negative energy)
     # of the described configurations.
-    exit("Not yet implemented")
+    #exit("Not yet implemented")
+    return np.dot(hidden_state, visible_state.T) / np.size(visible_state, 1)
+
 
 def configuration_goodness_gradient(visible_state, hidden_state):
     # <visible_state> is a binary matrix of size <number of visible units> by
@@ -172,7 +174,8 @@ def configuration_goodness_gradient(visible_state, hidden_state):
     # shape as the model parameters, which by the way are not provided to this
     # function. Notice that we're talking about the mean over data cases
     # (as opposed to the sum over data cases).
-    exit("Not yet implemented")
+    #exit("Not yet implemented")
+    return np.dot(hidden_state, visible_state.T) / np.size(visible_state, 1)
 
 def hidden_state_to_visible_probabilities(rbm_w, hidden_state):
     # <rbm_w> is a matrix of size <number of hidden units> by
@@ -183,7 +186,8 @@ def hidden_state_to_visible_probabilities(rbm_w, hidden_state):
     # <number of configurations that we're handling in parallel>.
     # This takes in the (binary) states of the hidden units, and returns the
     # activation probabilities of the visible units, conditional on those states.
-    exit("Not yet implemented")
+    #exit("Not yet implemented")
+    return logistic(np.dot(rbm_w.T, hidden_state))
 
 def visible_state_to_hidden_probabilities(rbm_w, visible_state):
     # <rbm_w> is a matrix of size <number of hidden units> by
@@ -194,7 +198,14 @@ def visible_state_to_hidden_probabilities(rbm_w, visible_state):
     # <number of configurations that we're handling in parallel>.
     # This takes in the (binary) states of the visible units, and returns the
     # activation probabilities of the hidden units conditional on those states.
-    exit("Not yet implemented")
+    return logistic(np.dot(rbm_w, visible_state))
+    #exit("Not yet implemented")
+
+def partition_log(w):
+    dec_2_bin = lambda x, n_bits: np.array(["{0:b}".format(val).zfill(n_bits) for val in x])
+    binary = np.array([list(val) for val in dec_2_bin(range(pow(2, np.size(w, 0))), np.size(w, 0))], dtype=float)
+    return np.log(np.sum(np.prod((np.exp(np.dot(binary, w)) + 1).T, axis=0)))
+
 
 def a4_main(n_hid, lr_rbm, lr_classification, n_iterations):
     # first, train the rbm
@@ -292,9 +303,13 @@ data_37_cases = sample_bernoulli(temp['inputs'])
 test_hidden_state_1_case = sample_bernoulli(a4_rand([100, 1], 0))
 test_hidden_state_10_cases = sample_bernoulli(a4_rand([100, 10], 1))
 test_hidden_state_37_cases = sample_bernoulli(a4_rand([100, 37], 2))
+#print(test_hidden_state_37_cases);
 
 report_calls_to_sample_bernoulli = True
-
+#print(describe_matrix(visible_state_to_hidden_probabilities(test_rbm_w, data_37_cases)))
+#print(describe_matrix(hidden_state_to_visible_probabilities(test_rbm_w, test_hidden_state_37_cases)))
+#print(describe_matrix(configuration_goodness(test_rbm_w, data_37_cases, test_hidden_state_37_cases)))
+print("Log (base e) of partition function for small_test_rbm_w is :", partition_log(small_test_rbm_w))
 del temp
 
 # Part 2 - Main part

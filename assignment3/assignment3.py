@@ -210,6 +210,7 @@ def loss(model, data, wd_coefficient):
 
     # probability of each class. Each column (i.e. each case) sums to 1.
     # size: <number of classes, i.e. 10> by <number of data cases>
+
     class_prob = np.exp(log_class_prob)
 
     # select the right log class probability using that sum; then take the
@@ -320,6 +321,15 @@ def classification_performance(model, data):
 
 # -----
 # Main program
-a3(wd_coefficient = 0, n_hid = 0, n_iters = 0, learning_rate = 0,
-        momentum_multiplier = 0, do_early_stopping = False, mini_batch_size = 0)
+a3(wd_coefficient = 0, n_hid = 10, n_iters = 70, learning_rate = 0.0,
+        momentum_multiplier = 0.0, do_early_stopping = False, mini_batch_size = 4)
+
+learning_rates = [0.002, 0.01, 0.05, 0.2, 1.0, 5.0, 20.0]
+momentums = [0.0, 0.9]
+for momentum in momentums:
+    for learning_rate in learning_rates:
+        print ("Momentum and learning rate are ({0}, {1})".format(momentum, learning_rate))
+        print a3(wd_coefficient = 0, n_hid = 10, n_iters = 70, learning_rate = 0.0,
+        momentum_multiplier = 0.0, do_early_stopping = False, mini_batch_size = 4)
+
 
